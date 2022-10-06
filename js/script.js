@@ -186,15 +186,38 @@ button.addEventListener("click", function(e) {
   }
 
   // Check if credit card is selected
-  if (creditCard.style.display === "block") {
-    const creditCardRegEx = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/;
+  if (paymentSelects.value === "credit-card") {
+    // reg ex for cc-num zip code and CVV
+    const creditCardRegEx = /^([0-9]{13,16})$/;
+    const zipCodeRegEx = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
+    const cvvRegEx = /^([0-9]{3})$/;
+
     const creditCardNumber = document.getElementById('cc-num');
+    const zipCode = document.getElementById('zip');
+    const cvv = document.getElementById('cvv');
+
     if (creditCardRegEx.test(creditCardNumber.value)) {
       e.preventDefault();
       alert("Success");
     } else {
       e.preventDefault();
       alert("Invalid credit card number");
+    }
+
+    if (zipCodeRegEx.test(zipCode.value)) {
+      e.preventDefault();
+      alert("valid zip code")
+    } else {
+      e.preventDefault();
+      alert("Not a post code.");
+    }
+
+    if (cvvRegEx.test(cvv.value)) {
+      e.preventDefault();
+      alert("Successful cvv")
+    } else {
+      e.preventDefault();
+      alert("Not valid cvv");
     }
   }
 
