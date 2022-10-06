@@ -156,28 +156,46 @@ paymentSelects.onchange = () => {
   }
 }
 
+// Get the button
 const button = document.querySelector('button');
+// Liseten for click event and pass the event as param
 button.addEventListener("click", function(e) {
 
 // Check is name field is empty
   if (nameInput.value == 0) {
+    // if name input is empty disable default refresh and show alert
     e.preventDefault();
     alert("Add your name");
   }
 
 // Check for correct email formatting
   var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  // If the input value of the email matches the regex return true
   if (emailInput.value.match(mailformat)) {
-    return true
   } else {
+    // Otherwise prevent default refresh and alert user
     e.preventDefault();
     alert("Invalid address");
   }
 
-// Check if activities are unselected
+// Check if activities are unselected by seeing if checkArr has any values
   if (checkedArr.length === 0) {
+    // If no values prevent submission and alert user
     e.preventDefault();
     alert("Activity must be selected");
+  }
+
+  // Check if credit card is selected
+  if (creditCard.style.display === "block") {
+    const creditCardRegEx = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/;
+    const creditCardNumber = document.getElementById('cc-num');
+    if (creditCardRegEx.test(creditCardNumber.value)) {
+      e.preventDefault();
+      alert("Success");
+    } else {
+      e.preventDefault();
+      alert("Invalid credit card number");
+    }
   }
 
 
