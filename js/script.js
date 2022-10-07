@@ -114,6 +114,8 @@ function showBitcoinPayment() {
   bitcoin.style.display = "block";
 }
 
+
+
 // display text field based on selection
 jobRoleSelects.onchange = () => { displayOtherJobRole() }
 
@@ -161,11 +163,13 @@ const button = document.querySelector('button');
 // Liseten for click event and pass the event as param
 button.addEventListener("click", function(e) {
 
+
 // Check is name field is empty
   if (nameInput.value == 0) {
     // if name input is empty disable default refresh and show alert
     e.preventDefault();
-    alert("Add your name");
+    const nameHint = document.getElementById('name-hint');
+    nameHint.style.display = "block";
   }
 
 // Check for correct email formatting
@@ -175,14 +179,16 @@ button.addEventListener("click", function(e) {
   } else {
     // Otherwise prevent default refresh and alert user
     e.preventDefault();
-    alert("Invalid address");
+    const emailHint = document.getElementById('email-hint');
+    emailHint.style.display = "block";
   }
 
 // Check if activities are unselected by seeing if checkArr has any values
   if (checkedArr.length === 0) {
     // If no values prevent submission and alert user
     e.preventDefault();
-    alert("Activity must be selected");
+    const activitiesHint = document.getElementById('activities-hint');
+    activitiesHint.style.display = "block";
   }
 
   // Check if credit card is selected
@@ -198,28 +204,49 @@ button.addEventListener("click", function(e) {
 
     if (creditCardRegEx.test(creditCardNumber.value)) {
       e.preventDefault();
-      alert("Success");
+      creditCardNumber.classList.remove("not-valid");
+      creditCardNumber.classList.remove("error");
     } else {
       e.preventDefault();
-      alert("Invalid credit card number");
+      creditCardNumber.classList.add("not-valid");
+      creditCardNumber.classList.add("error");
+      const ccNumHint = document.getElementById('cc-hint');
+      ccNumHint.style.display = "block";
     }
 
     if (zipCodeRegEx.test(zipCode.value)) {
       e.preventDefault();
-      alert("valid zip code")
+      zipCode.classList.remove("not-valid");
+      zipCode.classList.remove("error");
     } else {
       e.preventDefault();
-      alert("Not a post code.");
+      zipCode.classList.add("not-valid");
+      zipCode.classList.add("error");
+      const zipHint = document.getElementById('zip-hint');
+      zipHint.style.display = "block";
     }
 
     if (cvvRegEx.test(cvv.value)) {
       e.preventDefault();
-      alert("Successful cvv")
+      cvv.classList.remove("not-valid");
+      cvv.classList.remove("error");
     } else {
       e.preventDefault();
-      alert("Not valid cvv");
+      cvv.classList.add("not-valid");
+      cvv.classList.add("error");
+      const cvvHint = document.getElementById('cvv-hint');
+      cvvHint.style.display = "block";
     }
   }
-
-
 });
+
+function addFocus(event, labelClass) {
+  activities.addEventListener(event, e => {
+    const input = e.target;
+    const label = input.parentNode;
+    label.className = labelClass;
+  });
+}
+
+addFocus("focusin", "focus")
+addFocus("focusout", "")
