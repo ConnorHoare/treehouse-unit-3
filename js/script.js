@@ -5,17 +5,27 @@ const jobRoleSelects = document.getElementById("title");
 const colorSelects = document.getElementById("color");
 const designSelects = document.getElementById("design");
 
-const activities = document.getElementById("activities-box");
+const activities = document.getElementById('activities');
+const activitiesBox = document.getElementById("activities-box");
 const activitiesCost = document.getElementById("activities-cost");
+const activitiesHint = document.getElementById('activities-hint');
 let counter = 0;
 
 const paymentSelects = document.getElementById("payment");
 const creditCard = document.getElementById("credit-card");
 const paypal = document.getElementById("paypal");
 const bitcoin = document.getElementById("bitcoin");
+const creditCardNumber = document.getElementById("cc-num");
+const zipCode = document.getElementById('zip');
+const cvv = document.getElementById('cvv');
 
 const nameInput = document.getElementById("name");
 const emailInput = document.getElementById("email");
+
+const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+const creditCardRegex = /^([0-9]{13,16})$/;
+const zipCodeRegEx = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
+const cvvRegEx = /^([0-9]{3})$/;
 
 let checkedArr = [];
 
@@ -113,7 +123,52 @@ function showBitcoinPayment() {
   paypal.style.display = "none";
   bitcoin.style.display = "block";
 }
-
+// Validate inputs
+function validateInput(input, regex) {
+  if (regex.test(input.value)) {
+    input.closest('label').className = 'valid';
+    input.nextElementSibling.style.display = "none";
+    input.classList.remove('error');
+  } else {
+    input.closest('label').className = 'not-valid';
+    input.nextElementSibling.style.display = "block";
+    input.classList.add('error');
+  }
+}
+// Name Validation
+function validateName(input) {
+  if (input.value.length == 0) {
+    input.closest('label').className = 'not-valid';
+    input.nextElementSibling.style.display = 'block';
+    input.classList.add('error');
+  } else {
+    input.closest('label').className = 'valid';
+    input.nextElementSibling.style.display = "none";
+    input.classList.remove('error');
+  }
+}
+// Add focus to the inputs
+function addFocus(event, labelClass) {
+  activities.addEventListener(event, e => {
+    const input = e.target;
+    const label = input.parentNode;
+    label.className = labelClass;
+  });
+}
+// Add error classes to activities
+function addActivitiesErrors() {
+  activitiesHint.style.display = "block";
+  activities.classList.add("error");
+  activities.classList.add("not-valid");
+  activities.classList.remove("valid");
+}
+// Remove error classes to activities
+function removeActivitiesErrors() {
+  activitiesHint.style.display = "none";
+  activities.classList.remove("error");
+  activities.classList.remove("not-valid");
+  activities.classList.add("valid");
+}
 
 
 // display text field based on selection
@@ -158,95 +213,24 @@ paymentSelects.onchange = () => {
   }
 }
 
-// Get the button
-const button = document.querySelector('button');
-// Liseten for click event and pass the event as param
-button.addEventListener("click", function(e) {
+document.querySelector('form').addEventListener("submit", (e) => {
+  validateInput(emailInput, mailFormat);
+  validateInput(creditCardNumber, creditCardRegex);
+  validateInput(zipCode, zipCodeRegEx);
+  validateInput(cvv, cvvRegEx);
+  validateName(nameInput);
 
-
-// Check is name field is empty
-  if (nameInput.value == 0) {
-    // if name input is empty disable default refresh and show alert
-    e.preventDefault();
-    const nameHint = document.getElementById('name-hint');
-    nameHint.style.display = "block";
-  }
-
-// Check for correct email formatting
-  var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  // If the input value of the email matches the regex return true
-  if (emailInput.value.match(mailformat)) {
-  } else {
-    // Otherwise prevent default refresh and alert user
-    e.preventDefault();
-    const emailHint = document.getElementById('email-hint');
-    emailHint.style.display = "block";
-  }
-
-// Check if activities are unselected by seeing if checkArr has any values
   if (checkedArr.length === 0) {
-    // If no values prevent submission and alert user
+   // If no values prevent submission and alert user
+   addActivitiesErrors()
+ } else {
+   removeActivitiesErrors()
+ }
+
+  if(document.querySelectorAll(".not-valid").length > 0) {
     e.preventDefault();
-    const activitiesHint = document.getElementById('activities-hint');
-    activitiesHint.style.display = "block";
-  }
-
-  // Check if credit card is selected
-  if (paymentSelects.value === "credit-card") {
-    // reg ex for cc-num zip code and CVV
-    const creditCardRegEx = /^([0-9]{13,16})$/;
-    const zipCodeRegEx = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
-    const cvvRegEx = /^([0-9]{3})$/;
-
-    const creditCardNumber = document.getElementById('cc-num');
-    const zipCode = document.getElementById('zip');
-    const cvv = document.getElementById('cvv');
-
-    if (creditCardRegEx.test(creditCardNumber.value)) {
-      e.preventDefault();
-      creditCardNumber.classList.remove("not-valid");
-      creditCardNumber.classList.remove("error");
-    } else {
-      e.preventDefault();
-      creditCardNumber.classList.add("not-valid");
-      creditCardNumber.classList.add("error");
-      const ccNumHint = document.getElementById('cc-hint');
-      ccNumHint.style.display = "block";
-    }
-
-    if (zipCodeRegEx.test(zipCode.value)) {
-      e.preventDefault();
-      zipCode.classList.remove("not-valid");
-      zipCode.classList.remove("error");
-    } else {
-      e.preventDefault();
-      zipCode.classList.add("not-valid");
-      zipCode.classList.add("error");
-      const zipHint = document.getElementById('zip-hint');
-      zipHint.style.display = "block";
-    }
-
-    if (cvvRegEx.test(cvv.value)) {
-      e.preventDefault();
-      cvv.classList.remove("not-valid");
-      cvv.classList.remove("error");
-    } else {
-      e.preventDefault();
-      cvv.classList.add("not-valid");
-      cvv.classList.add("error");
-      const cvvHint = document.getElementById('cvv-hint');
-      cvvHint.style.display = "block";
-    }
   }
 });
-
-function addFocus(event, labelClass) {
-  activities.addEventListener(event, e => {
-    const input = e.target;
-    const label = input.parentNode;
-    label.className = labelClass;
-  });
-}
 
 addFocus("focusin", "focus")
 addFocus("focusout", "")
