@@ -136,6 +136,24 @@ function validateInput(input, regex) {
     input.classList.add('error');
   }
 }
+
+function validateEmail(input, regex) {
+  if (input.value.length === 0) {
+    input.closest('label').className = 'not-valid';
+    input.nextElementSibling.style.display = "block";
+    input.classList.add('error');
+    input.nextElementSibling.innerText = "Email cannot be empty"
+  } else if (regex.test(input.value)) {
+    input.closest('label').className = 'valid';
+    input.nextElementSibling.style.display = "none";
+    input.classList.remove('error');
+  } else {
+    input.closest('label').className = 'not-valid';
+    input.nextElementSibling.style.display = "block";
+    input.classList.add('error');
+    input.nextElementSibling.innerText = "Email not formatted correctly"
+  }
+}
 // Name Validation
 function validateName(input) {
   if (input.value.length == 0) {
@@ -262,8 +280,28 @@ paymentSelects.onchange = () => {
   }
 }
 
+nameInput.addEventListener("keyup", (e) => {
+  validateName(nameInput)
+})
+
+emailInput.addEventListener("keyup", (e) => {
+  validateEmail(emailInput, mailFormat)
+})
+
+creditCardNumber.addEventListener("keyup", (e) => {
+  validateInput(creditCardNumber, creditCardRegex)
+})
+
+zipCode.addEventListener("keyup", (e) => {
+  validateInput(zipCode, zipCodeRegEx)
+})
+
+cvv.addEventListener("keyup", (e) => {
+  validateInput(cvv, cvvRegEx)
+})
+
 document.querySelector('form').addEventListener("submit", (e) => {
-  validateInput(emailInput, mailFormat);
+  validateEmail(emailInput, mailFormat);
   validateInput(creditCardNumber, creditCardRegex);
   validateInput(zipCode, zipCodeRegEx);
   validateInput(cvv, cvvRegEx);
