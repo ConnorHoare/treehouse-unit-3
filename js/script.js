@@ -7,6 +7,7 @@ const designSelects = document.getElementById("design");
 
 const activities = document.getElementById('activities');
 const activitiesBox = document.getElementById("activities-box");
+const activitiesLabeles = activitiesBox.children;
 const activitiesCost = document.getElementById("activities-cost");
 const activitiesHint = document.getElementById('activities-hint');
 let counter = 0;
@@ -184,6 +185,52 @@ designSelects.onchange = () => {
   }
 }
 
+// conflicting activities function
+function findConflicts(selectedCheckbox, labels) {
+    // get day and time of selected checkbox
+    const selectedTime = selectedCheckbox.dataset.dayAndTime;
+    // get name of checkbox
+    const selectedName = selectedCheckbox.name;
+    // create empty array 
+    const confilcts = []
+    // loop through all labels
+    for (var i = 0; i < labels.length; i++) {
+      // create variable for current label
+      let label = labels[i];
+      // get the checkbox from the label
+      let checkbox = label.firstElementChild;
+      // get the time and day from the current label
+      let time = checkbox.dataset.dayAndTime;
+      // get the name of the current label
+      let name = checkbox.name;
+      // check if the selected checkbox has and time match in the loop
+      if (time === selectedTime && name !== selectedName) {
+        // push the conflicting time checkbox to the array 
+        confilcts.push(checkbox);
+      }
+    }
+    // return the array
+    return confilcts;
+}
+
+// disable the confilcting results
+function disableConflicts(isConflicting, labelClass, selectedCheckbox, labels) {
+  // find conflicts and store them in constant
+  const conflictingCheckboxes = findConflicts(selectedCheckbox, labels);
+  // loop through all the conflicting checkboxes
+  for (var i = 0; i < conflictingCheckboxes.length; i++) {
+    // get the current conflicitng checkbox
+    let checkbox = conflictingCheckboxes[i];
+    // get the label of the checkbox
+    let label = checkbox.parentNode;
+    // set the checkboxes disabled property to the parameter
+    checkbox.disabled = isConflicting;
+    // set the labels class to the parameter
+    label.className = labelClass;
+  }
+}
+
+
 // Detect changes on the activties inputs
 activities.onchange = (e) => {
   const clicked = e.target;
@@ -193,10 +240,12 @@ activities.onchange = (e) => {
     counter += parsedCost
     activitiesCost.innerText = `Total: $${counter}`;
     checkedArr.push(clicked)
+    disableConflicts(true, 'disabled', clicked, activitiesLabeles)
   } else if (clicked.checked === false) {
     counter -= parsedCost
     activitiesCost.innerText = `Total: $${counter}`;
     checkedArr.pop(clicked);
+    disableConflicts(false, '', clicked, activitiesLabeles);
   }
 }
 
