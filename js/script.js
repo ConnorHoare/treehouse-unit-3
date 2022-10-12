@@ -59,8 +59,10 @@ function displayOtherJobRole() {
 }
 // function to loop through colorSelects and set display values for js puns colors
 function displayJsPunsColors() {
+  
   // only display the js puns colors from the colorSelects
   colorSelects.disabled = false;
+  colorSelects.seletedIndex = 0;
   for ( var i = 0; i < colorSelects.length; i++) {
     if (colorSelects[i].value === "dimgrey") {
       colorSelects[i].style.display = "none";
@@ -84,7 +86,9 @@ function displayJsPunsColors() {
 }
 // function to loop through colorSelects and set display values for heart js colors
 function displayHeartJsColors() {
+  
   colorSelects.disabled = false;
+  colorSelects.seletedIndex = 0;
   for ( var i = 0; i < colorSelects.length; i++) {
     if (colorSelects[i].value === "dimgrey") {
       colorSelects[i].style.display = "block";
