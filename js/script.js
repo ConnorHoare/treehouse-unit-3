@@ -62,7 +62,7 @@ function displayJsPunsColors() {
   
   // only display the js puns colors from the colorSelects
   colorSelects.disabled = false;
-  colorSelects.seletedIndex = 0;
+  colorSelects.selectedIndex = 0;
   for ( var i = 0; i < colorSelects.length; i++) {
     if (colorSelects[i].value === "dimgrey") {
       colorSelects[i].style.display = "none";
@@ -88,7 +88,7 @@ function displayJsPunsColors() {
 function displayHeartJsColors() {
   
   colorSelects.disabled = false;
-  colorSelects.seletedIndex = 0;
+  colorSelects.selectedIndex = 0;
   for ( var i = 0; i < colorSelects.length; i++) {
     if (colorSelects[i].value === "dimgrey") {
       colorSelects[i].style.display = "block";
