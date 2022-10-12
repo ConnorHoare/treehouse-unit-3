@@ -13,6 +13,7 @@ const activitiesHint = document.getElementById('activities-hint');
 let counter = 0;
 
 const paymentSelects = document.getElementById("payment");
+const paymentOptions = paymentSelects.children;
 const creditCard = document.getElementById("credit-card");
 const paypal = document.getElementById("paypal");
 const bitcoin = document.getElementById("bitcoin");
@@ -45,6 +46,7 @@ window.onload = () => {
     colorSelects.disabled = true;
 
     // Set the creditCard as the default payment
+    paymentOptions[1].selected = true;
     paypal.style.display = "none";
     bitcoin.style.display = "none";
 }
@@ -305,11 +307,16 @@ cvv.addEventListener("keyup", (e) => {
 })
 
 document.querySelector('form').addEventListener("submit", (e) => {
-  validateEmail(emailInput, mailFormat);
-  validateInput(creditCardNumber, creditCardRegex);
-  validateInput(zipCode, zipCodeRegEx);
-  validateInput(cvv, cvvRegEx);
+  if (paymentSelects.value === "credit-card") {
+    
+    validateInput(creditCardNumber, creditCardRegex);
+    validateInput(zipCode, zipCodeRegEx);
+    validateInput(cvv, cvvRegEx);
+    
+  } 
+  
   validateName(nameInput);
+  validateEmail(emailInput, mailFormat);
 
   if (checkedArr.length === 0) {
    // If no values prevent submission and alert user
