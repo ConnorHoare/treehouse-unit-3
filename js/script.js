@@ -265,6 +265,7 @@ activities.onchange = (e) => {
     activitiesCost.innerText = `Total: $${counter}`;
     checkedArr.push(clicked)
     disableConflicts(true, 'disabled', clicked, activitiesLabeles)
+    removeActivitiesErrors()
   } else if (clicked.checked === false) {
     counter -= parsedCost
     activitiesCost.innerText = `Total: $${counter}`;
@@ -277,6 +278,7 @@ activities.onchange = (e) => {
 paymentSelects.onchange = () => {
   if (paymentSelects.value === "credit-card") {
     showCreditCardPayment()
+    checkEmptyFields(creditCardNumber, zipCode, cvv)
   }
   if (paymentSelects.value === "paypal") {
     showPayPalPayment()
@@ -284,6 +286,34 @@ paymentSelects.onchange = () => {
   if (paymentSelects.value === "bitcoin") {
     showBitcoinPayment()
   }
+  if (paymentSelects.value === "bitcoin" || paymentSelects.value === "paypal") {
+    clearCreditCardField(creditCardNumber, zipCode, cvv);
+  }
+}
+
+function clearCreditCardField(ccfield, zcfield, cvvfield) {
+  const array = [ccfield, zcfield, cvvfield];
+  array.forEach(field => {
+    field.closest('label').classList.remove('not-valid');
+    field.classList.remove('error');
+    field.value = "";
+    field.nextElementSibling.style.display = 'none';
+  })
+}
+
+function checkEmptyFields(ccfield, zcfield, cvvfield) {
+  const array = [ccfield, zcfield, cvvfield];
+  array.forEach(field => {
+    if (field.value.length === 0) {
+      field.closest('label').classList.add('not-valid');
+      field.classList.add('error');
+      field.nextElementSibling.style.display = 'block';
+    } else {
+      field.closest('label').classList.remove('not-valid');
+      field.classList.remove('error');
+      field.nextElementSibling.style.display = 'none';
+    }
+  })
 }
 
 nameInput.addEventListener("keyup", (e) => {
@@ -307,16 +337,21 @@ cvv.addEventListener("keyup", (e) => {
 })
 
 document.querySelector('form').addEventListener("submit", (e) => {
-  if (paymentSelects.value === "credit-card") {
+  if (paymentSelects.value === "Credit Card") {
     
     validateInput(creditCardNumber, creditCardRegex);
     validateInput(zipCode, zipCodeRegEx);
     validateInput(cvv, cvvRegEx);
-    
-  } 
+    validateName(nameInput);
+    validateEmail(emailInput, mailFormat);
+
+  } else if (paymentSelects.value === "Bitcoin" || paymentSelects.value === "PayPal") {
+    validateName(nameInput);
+    validateEmail(emailInput, mailFormat);
+    creditCardNumber.innerHTML = ""
+  }
   
-  validateName(nameInput);
-  validateEmail(emailInput, mailFormat);
+  
 
   if (checkedArr.length === 0) {
    // If no values prevent submission and alert user
@@ -327,7 +362,10 @@ document.querySelector('form').addEventListener("submit", (e) => {
 
   if(document.querySelectorAll(".not-valid").length > 0) {
     e.preventDefault();
+    console.log("not submitted");
   }
+
+
 });
 
 addFocus("focusin", "focus")
