@@ -38,8 +38,8 @@ window.onload = () => {
     // Get the first input element and set the focus method to prompt user to start input here
 
     nameInput.focus();
-    validateName(nameInput)
-    validateEmail(emailInput, mailFormat)
+    // validateName(nameInput)
+    // validateEmail(emailInput, mailFormat)
 
     // Hide the other job role field
     otherJobRole.style.display = "none";
