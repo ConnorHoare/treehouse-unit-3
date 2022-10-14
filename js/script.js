@@ -38,6 +38,8 @@ window.onload = () => {
     // Get the first input element and set the focus method to prompt user to start input here
 
     nameInput.focus();
+    validateName(nameInput)
+    validateEmail(emailInput, mailFormat)
 
     // Hide the other job role field
     otherJobRole.style.display = "none";
@@ -49,6 +51,7 @@ window.onload = () => {
     paymentOptions[1].selected = true;
     paypal.style.display = "none";
     bitcoin.style.display = "none";
+    checkEmptyFields(creditCardNumber, zipCode, cvv)
 }
 
 // function to change show text field when user selects other job role
